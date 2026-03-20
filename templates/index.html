@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Twin Factory Simulator - TNI26037</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Control Bar -->
+        <div class="control-bar">
+            <div class="control-buttons">
+                <button id="start-btn" class="ctrl-btn start-btn">▶ Start</button>
+                <button id="pause-btn" class="ctrl-btn pause-btn">⏸ Pause</button>
+                <button id="stop-btn" class="ctrl-btn stop-btn">⏹ Stop</button>
+                <button id="reset-btn" class="ctrl-btn reset-btn">🔄 Reset</button>
+            </div>
+            <div class="control-settings">
+                <label>Sim Speed:</label>
+                <input type="range" id="sim-speed" min="0.1" max="2" step="0.1" value="1">
+                <span id="speed-display">1.0x</span>
+            </div>
+            <div class="control-status">
+                <span class="status-indicator">Idle</span>
+                <span class="progress-label">Progress: <span id="progress-value">0%</span></span>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="dashboard">
+                <span class="tab-icon">📊</span>
+                <span class="tab-label">Dashboard</span>
+            </button>
+            <button class="tab-btn" data-tab="factory-floor">
+                <span class="tab-icon">🏭</span>
+                <span class="tab-label">Factory Floor</span>
+            </button>
+            <button class="tab-btn" data-tab="configuration">
+                <span class="tab-icon">⚙️</span>
+                <span class="tab-label">Configuration</span>
+            </button>
+            <button class="tab-btn" data-tab="whatif">
+                <span class="tab-icon">🔮</span>
+                <span class="tab-label">What-If</span>
+            </button>
+            <button class="tab-btn" data-tab="analytics">
+                <span class="tab-icon">📈</span>
+                <span class="tab-label">Analytics</span>
+            </button>
+        </div>
+
+        <!-- Tab Content Container -->
+        <div class="app-container">
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active">
+                <!-- Metrics Row -->
+                <div class="metrics-row">
+                    <div class="metric-card">
+                        <div class="metric-label">THROUGHPUT</div>
+                        <div class="metric-value" id="throughput-value">0</div>
+                        <div class="metric-unit">units/hr</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">AVG LEAD TIME</div>
+                        <div class="metric-value" id="lead-time-value">0</div>
+                        <div class="metric-unit">min</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">JOBS COMPLETED</div>
+                        <div class="metric-value" id="jobs-completed-value">0</div>
+                        <div class="metric-unit">units</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">TOTAL WIP</div>
+                        <div class="metric-value" id="wip-value">0</div>
+                        <div class="metric-unit">units</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">OPERATOR UTIL.</div>
+                        <div class="metric-value" id="operator-util-value">—</div>
+                        <div class="metric-unit">%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">SIM TIME</div>
+                        <div class="metric-value" id="sim-time-value">0</div>
+                        <div class="metric-unit">min</div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-row">
+                    <div class="chart-panel">
+                        <h3>Station Utilization & Queue</h3>
+                        <canvas id="utilization-chart"></canvas>
+                    </div>
+                    <div class="chart-panel">
+                        <h3>Lead Time Distribution</h3>
+                        <canvas id="leadtime-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Bottom Section -->
+                <div class="bottom-section">
+                    <div class="queue-panel">
+                        <h3>Queue Length per Station</h3>
+                        <div class="queue-timeline">
+                            <input type="range" id="queue-timeline" min="0" max="100" value="2" class="timeline-slider">
+                            <div class="timeline-labels">
+                                <span>0:00:02</span>
+                                <span id="timeline-end">0:00:37</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottleneck-panel">
+                        <h3>Bottleneck Radar / Scores</h3>
+                        <div id="bottleneck-list" class="bottleneck-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Factory Floor Tab -->
+            <div id="factory-floor-tab" class="tab-content">
+                <h2 class="page-title">Virtual Factory Floor</h2>
+                <div class="factory-floor-grid" id="factory-floor-grid">
+                    <!-- Factory floor will be dynamically populated -->
+                </div>
+                <div class="legend-section">
+                    <span class="legend-item"><span class="legend-color" style="background: #10b981;"></span> Running</span>
+                    <span class="legend-item"><span class="legend-color" style="background: #f59e0b;"></span> Idle</span>
+                    <span class="legend-item"><span class="legend-color" style="background: #ef4444;"></span> Down</span>
+                    <span class="legend-item"><span class="legend-color" style="background: #fb923c;"></span> Blocked</span>
+                </div>
+            </div>
+
+            <!-- Configuration Tab -->
+            <div id="configuration-tab" class="tab-content">
+                <div class="config-container">
+                    <div class="config-section">
+                        <h3>⚙️ Simulation Parameters</h3>
+                        <div class="param-group">
+                            <label for="config-sim-time">Simulation Time (hours)</label>
+                            <input type="number" id="config-sim-time" value="8" min="1" max="24">
+                        </div>
+                        <div class="param-group">
+                            <label for="config-arrival-rate">Product Arrival Rate (per hour)</label>
+                            <input type="number" id="config-arrival-rate" value="30" min="1" max="100">
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3>🔧 Station Configuration</h3>
+                        <div id="station-config-list"></div>
+                    </div>
+
+                    <div class="config-actions">
+                        <button id="save-config-btn" class="btn btn-primary">💾 Save Configuration</button>
+                        <button id="load-default-btn" class="btn btn-secondary">🔄 Load Defaults</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What-If Tab -->
+            <div id="whatif-tab" class="tab-content">
+                <h2 class="page-title">What-If Scenario Analysis</h2>
+                <p class="page-subtitle">Modify parameters and compare against baseline scenario</p>
+                
+                <div class="whatif-buttons">
+                    <button id="run-baseline-btn" class="btn btn-primary">▶ Run Baseline</button>
+                    <button id="run-whatif-scenario-btn" class="btn btn-success">▶ Run What-If</button>
+                    <button id="compare-scenarios-btn" class="btn btn-secondary">🔀 Compare</button>
+                </div>
+                
+                <div class="whatif-container">
+                    <div class="whatif-controls">
+                        <h3>⚙️ Scenario Configuration</h3>
+                        <div class="param-group">
+                            <label for="whatif-station">Select Station to Optimize:</label>
+                            <select id="whatif-station">
+                                <option value="">-- Select Station --</option>
+                                <option value="Cutting">Cutting</option>
+                                <option value="Machining">Machining</option>
+                                <option value="Assembly">Assembly</option>
+                                <option value="Inspection">Inspection</option>
+                                <option value="Packing">Packing</option>
+                            </select>
+                        </div>
+                        <div class="param-group">
+                            <label for="whatif-action">Improvement Action:</label>
+                            <select id="whatif-action">
+                                <option value="add_machine">Add Machine (+1)</option>
+                                <option value="reduce_time">Reduce Process Time (-20%)</option>
+                                <option value="both">Both Improvements</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="whatif-results" id="whatif-results">
+                        <p class="placeholder-text">Run both scenarios to see comparison</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics-tab" class="tab-content">
+                <h2 class="page-title">Advanced Analytics</h2>
+                <div class="analytics-charts">
+                    <div class="chart-panel chart-panel-large">
+                        <h3>Utilization Over Time</h3>
+                        <canvas id="utilization-timeline-chart"></canvas>
+                    </div>
+                    <div class="chart-panel chart-panel-large">
+                        <h3>WIP Over Time</h3>
+                        <canvas id="wip-timeline-chart"></canvas>
+                    </div>
+                </div>
+                <div class="analytics-section">
+                    <h3>Throughput Analysis</h3>
+                    <canvas id="throughput-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
