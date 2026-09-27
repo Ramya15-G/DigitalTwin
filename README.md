@@ -1,376 +1,224 @@
- Digital Twin for Smart Manufacturing
 
-🏭 **Simulation-Based Production Bottleneck Analysis System**
+🏭 Digital Twin for Smart Manufacturing
+Simulation-Based Production Bottleneck Analysis System
 
-A simulation-based Digital Twin that models a small factory production system, monitors performance, identifies bottlenecks, and allows users to test production changes through What-If scenarios before applying them to the real factory.
+A simulation-based Digital Twin that models a small factory, monitors production performance, identifies bottlenecks, and allows users to test production changes through What-If scenarios.
 
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Python 3.11
-- Windows / Linux / macOS
-- Modern web browser
-
-### Installation
-
-1. **Clone the repository**
-
-```bash
-git clone https://github.com/Ramya15-G/DigitalTwin.git
-cd DigitalTwin
-Create virtual environment
-py -3.11 -m venv venv
-Activate virtual environment
-Windows
-venv\Scripts\activate
-Linux / macOS
-source venv/bin/activate
-Install dependencies
-pip install -r requirements.txt
-Run the application
-python app.py
-Open the dashboard
-http://127.0.0.1:5000
 🎯 Problem
 
-Small manufacturing systems contain multiple interconnected production stages such as:
+Small factories often face bottlenecks due to limited machines, operators, processing capacity, and production delays.
 
-Cutting
-   ↓
-Machining
-   ↓
-Assembly
-   ↓
-Inspection
-   ↓
-Packing
+Testing changes directly in the real factory can be costly and may interrupt production.
 
-When one stage becomes slower than the others, it can create queues, increase waiting time, reduce throughput, and affect the overall production process.
-
-The main challenge is that testing changes directly in a real factory can be costly and disruptive.
-
-For example:
-
-Should another machine be added?
-Should more operators be assigned?
-What happens if processing time changes?
-What happens if production conditions change?
-Which change improves the overall production performance?
-
-A factory needs a safer way to test these scenarios before implementing them.
+This project provides a virtual factory environment where production changes can be tested before applying them to the real system.
 
 💡 Solution
 
-This project creates a Digital Twin of the production system using discrete-event simulation.
+The system creates a virtual representation of a factory production line and simulates its behaviour.
 
-The virtual factory represents production stages, resources, processing times, queues and production flow.
+It helps users:
 
-Real Factory
-     ↓
-Production Parameters
-     ↓
-Digital Model
-     ↓
-Simulation
-     ↓
+Monitor production performance
+Identify bottleneck stations
+Analyze machine and operator utilization
+Track queues and WIP
+Test different production scenarios
+Compare results before and after changes
+🔄 How It Works
+
+Factory Data
+↓
+Digital Factory Model
+↓
+Production Simulation
+↓
 Performance Analysis
-     ↓
+↓
 Bottleneck Detection
-     ↓
+↓
 What-If Scenarios
-     ↓
+↓
 Result Comparison
-
-Instead of changing the real production system first, possible changes can be tested inside the simulated environment.
 
 ✨ Features
 📊 Production Dashboard
 
-Provides a centralized view of the factory's current simulation performance.
+Provides a quick view of key production metrics:
 
 Throughput
-Average Lead Time
+Lead Time
 Jobs Completed
-Total WIP
+WIP
 Operator Utilization
-Simulation Time
 Station Utilization
-Queue information
-Bottleneck scores
+Queue Status
 🏭 Factory Floor
 
-Provides a visual representation of the simulated production environment and its manufacturing stations.
+Represents the production flow:
+
+Cutting → Machining → Assembly → Inspection → Packing
 
 ⚙️ Configuration
 
-Allows production parameters and simulation conditions to be configured before running the model.
+Allows production parameters to be configured:
 
-🔮 What-If Analysis
+Machines
+Operators
+Processing Time
+Shift Duration
+Production Parameters
+🔍 Bottleneck Detection
 
-Allows users to test hypothetical production changes and observe their possible effect on factory performance.
+Identifies production constraints using:
 
-Example:
+Station Utilization
+Queue Length
+Waiting Time
+Throughput
+🔄 What-If Analysis
 
-Current Factory
-      ↓
-Identify Bottleneck
-      ↓
-Change Production Parameter
-      ↓
-Run Simulation
-      ↓
-Analyze Results
-      ↓
-Compare Performance
+Test production changes without modifying the real factory.
+
+Examples:
+
+Add a machine
+Add an operator
+Reduce processing time
+Change batch size
+Modify shift parameters
 📈 Analytics
 
-Provides visual analysis of production performance through charts and metrics.
+Compare simulation results and understand how different production decisions affect overall performance.
 
-🚨 Bottleneck Analysis
+📌 Key Performance Indicators
+KPI	Purpose
+Throughput	Production output
+Lead Time	Total production time
+WIP	Work-in-progress
+Utilization	Resource usage
+Queue Length	Waiting at stations
+Waiting Time	Production delays
+🖥️ Dashboard Preview
 
-Helps identify stations with higher production constraints using indicators such as:
+🧩 System Architecture
 
-Resource utilization
-Queue length
-Waiting time
-Throughput
-WIP
-▶️ Simulation Controls
+Factory Inputs
+↓
+Digital Twin Model
+↓
+Production Simulation
+↓
+Performance Analysis
+↓
+Bottleneck Detection
+↓
+What-If Analysis
+↓
+Result Comparison
 
-The dashboard provides controls to:
-
-Start simulation
-Pause simulation
-Stop simulation
-Reset simulation
-Adjust simulation speed
-📸 Dashboard Preview
-
-The dashboard provides an overview of production performance, station utilization, lead-time distribution and bottleneck scores.
-
-🔮 What-If Analysis
-
-The What-If module is used to experiment with hypothetical production changes.
-
-A scenario can be configured and simulated without modifying the actual factory.
-
-Existing Production System
-          ↓
-      Select Scenario
-          ↓
-    Modify Parameter
-          ↓
-      Run Simulation
-          ↓
-     Observe Metrics
-          ↓
-    Analyze Difference
-
-This provides a way to explore possible production improvements before making physical changes.
-
-📊 Key Performance Indicators
-Metric	Description
-Throughput	Production output achieved by the system
-Average Lead Time	Average time taken by jobs through the production system
-Jobs Completed	Number of completed production jobs
-WIP	Work-In-Progress currently inside the system
-Operator Utilization	Percentage of available operator capacity being used
-Queue Length	Jobs waiting at production stations
-Station Utilization	Utilization level of individual production stations
-🏗️ System Architecture
-┌──────────────────────────────┐
-│          Web Dashboard       │
-│      HTML / CSS / JavaScript │
-└──────────────┬───────────────┘
-               │
-               ↓
-┌──────────────────────────────┐
-│        Flask Backend         │
-│       Application Logic      │
-└──────────────┬───────────────┘
-               │
-               ↓
-┌──────────────────────────────┐
-│       SimPy Simulation       │
-│     Production Model         │
-└──────────────┬───────────────┘
-               │
-               ↓
-┌──────────────────────────────┐
-│      Production Metrics      │
-│  KPIs / Queues / Bottlenecks │
-└──────────────────────────────┘
+🛠️ Technology Stack
+Technology	Purpose
+Python	Core application logic
+Flask	Web application backend
+Flask-CORS	API communication
+SimPy	Production simulation
+NumPy	Numerical computation
+HTML	Frontend structure
+CSS	UI styling
+JavaScript	Frontend interaction
 📁 Project Structure
+
 DigitalTwin/
-│
-├── .vscode/
-│
-├── static/
-│   └── ...
-│
-├── templates/
-│   └── ...
-│
 ├── app.py
 ├── requirements.txt
 ├── START.bat
-└── README.md
-🛠️ Technology Stack
-Backend
-Python – Core programming language
-Flask – Web application framework
-Flask-CORS – Cross-origin request handling
-Simulation
-SimPy – Discrete-event production simulation
-NumPy – Numerical processing
-Frontend
-HTML
-CSS
-JavaScript
-⚙️ How It Works
+├── static/
+├── templates/
+└── .vscode/
 
-The simulation models the movement of production jobs through different manufacturing stations.
+🚀 Quick Start
+Prerequisites
+Python 3.11
+Git
+Installation
 
-Production Input
-       ↓
-   Cutting
-       ↓
-   Machining
-       ↓
-   Assembly
-       ↓
-  Inspection
-       ↓
-    Packing
-       ↓
-Finished Product
+git clone https://github.com/Ramya15-G/DigitalTwin.git
 
-During simulation, the system tracks production behaviour and calculates performance indicators.
+cd DigitalTwin
 
-These results are then visualized through the web dashboard.
+py -3.11 -m venv venv
 
-🧠 Bottleneck Identification
-
-A production station can become a constraint when it cannot keep up with the required production flow.
-
-The system provides multiple indicators to understand these constraints.
-
-High Utilization
-       +
-Long Queue
-       +
-High Waiting Time
-       ↓
-Potential Bottleneck
-       ↓
-Further Analysis
-
-Example dashboard output:
-
-Cutting       53%
-Machining     65%
-Assembly      56%
-Inspection    17%
-Packing        9%
-
-The values shown above are simulation outputs and can change depending on the configured scenario.
-
-🎥 Demo
-
-The project includes a short walkthrough demonstrating:
-
-Dashboard
-    ↓
-Factory Floor
-    ↓
-Configuration
-    ↓
-What-If Analysis
-    ↓
-Analytics
-
-Add the project demo video or GitHub-hosted video link here.
-
-📦 Dependencies
-
-The project currently uses:
-
-Flask 3.0.0 – Web application framework
-Flask-CORS 4.0.0 – CORS support
-SimPy 4.1.1 – Discrete-event simulation
-NumPy 1.26.2 – Numerical computation
-
-Install all dependencies using:
+venv\Scripts\activate
 
 pip install -r requirements.txt
-🧪 Example Use Case
 
-Consider a factory where machining becomes a bottleneck.
+Run
 
-Instead of immediately purchasing another machine:
+python app.py
 
-Current Factory
-       ↓
-Machining Bottleneck
-       ↓
-Create What-If Scenario
-       ↓
-Modify Production Condition
-       ↓
+Open:
+
+http://127.0.0.1:5000
+
+🔬 Example Use Case
+
+Factory production flow:
+
+Raw Material
+↓
+Cutting
+↓
+Machining
+↓
+Assembly
+↓
+Inspection
+↓
+Packing
+
+If Machining has higher processing time and queue length, the system identifies it as a potential bottleneck.
+
+The user can then test:
+
+Current System
+↓
+Identify Bottleneck
+↓
+Add Machine / Operator
+↓
 Run Simulation
-       ↓
-Check Throughput
-       ↓
-Check Lead Time
-       ↓
-Check WIP
-       ↓
+↓
 Compare Results
 
-The simulation can help understand the possible effect of the change before implementing it physically.
-
-🎯 Project Objectives
+🎯 Objectives
+Simulate small-scale factory production
 Identify production bottlenecks
-Monitor production performance
-Understand resource utilization
-Analyze queues and WIP
-Experiment with production scenarios
-Compare possible changes
-Support data-informed production decisions
+Monitor key performance indicators
+Evaluate resource utilization
+Support What-If analysis
+Reduce trial-and-error in real production
 🔮 Future Scope
-
-The current system focuses on simulation-based production analysis.
-
-Future development can extend the Digital Twin towards:
-
-Manual Factory Data
-        ↓
-    Digital Twin
-        ↓
-   Real-Time IoT
-        ↓
- Predictive Analytics
-        ↓
- AI-Based Optimization
-
-Potential extensions include:
-
-Real-time IoT sensor integration
-Live machine data
+IoT-based real-time factory data
+Live machine monitoring
 Predictive maintenance
-Demand forecasting
-Automated scenario comparison
-Advanced production optimization
-AI-assisted decision support
-🏆 Project Information
+AI-assisted production optimization
+Real-time Digital Twin synchronization
+Advanced production forecasting
+📌 Project Information
 
 Problem Statement: TNI26037
+Domain: Smart Manufacturing
+Focus: Digital Twin & Production Simulation
+Application: Production Bottleneck Analysis
 
-Domain: Smart Manufacturing / Industry 4.0
+👩‍💻 Author
 
-Project Type: Digital Twin & Production Simulation
+Ramya G
 
-The project focuses on simulating manufacturing operations to understand production bottlenecks and evaluate possible improvements in a virtual environment.
+GitHub: https://github.com/Ramya15-G
+
+LinkedIn: https://linkedin.com/in/ramya1512
+
+📄 License
+
+This project is developed for academic and educational purposes.
